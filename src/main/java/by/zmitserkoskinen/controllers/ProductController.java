@@ -16,26 +16,39 @@ public class ProductController {
     private ProductService service;
 
     @RequestMapping("/products")
-    public String listProducts(Model model){
+    public String listProducts(Model model) {
         model.addAttribute("products", service.listAllProducts());
         return "products";
     }
 
     @RequestMapping("/product/{id}")
-    public String get(@PathVariable int id, Model model){
-        model.addAttribute("product",  service.productsById(id));
+    public String get(@PathVariable int id, Model model) {
+        model.addAttribute("product", service.productsById(id));
         return "product";
     }
+
     @RequestMapping("/product/new")
-    public String create(Model model){
-        model.addAttribute("product",  new Product());
+    public String create(Model model) {
+        model.addAttribute("product", new Product());
         return "productform";
     }
 
+    @RequestMapping("/product/edit/{id}")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("product", service.productsById(id));
+        return "productform";
+    }
 
     @RequestMapping(value = "/product", method = RequestMethod.POST)
-    public String saveOrUpdateProduct(Product product){
+    public String saveOrUpdateProduct(Product product) {
         Product productSaved = service.saveOrUpdateProduct(product);
         return "redirect:/product/" + productSaved.getId();
+    }
+
+
+    @RequestMapping(value = "/product/delete/{id}")
+    public String delete(@PathVariable int id) {
+        service.delete(id);
+        return "redirect:/products";
     }
 }
