@@ -4,10 +4,7 @@ import by.zmitserkoskinen.domain.Product;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -20,6 +17,28 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> listAllProducts() {
         return new ArrayList<>(products.values());
+    }
+
+    @Override
+    public Product productsById(Integer id) {
+        return products.get(id);
+    }
+
+    @Override
+    public Product saveOrUpdateProduct(Product product) {
+        if (product != null){
+            if (product.getId() == null){
+                product.setId(getNextKey());
+            }
+            products.put(product.getId(), product);
+            return product;
+        }else {
+            throw new RuntimeException("Product can't be null");
+        }
+    }
+
+    private Integer getNextKey() {
+        return Collections.max(products.keySet()) + 1;
     }
 
     public void loadProducts() {
@@ -37,20 +56,20 @@ public class ProductServiceImpl implements ProductService {
         product2.setDescription("Product 2");
         product2.setPrice(new BigDecimal("18.95"));
         product2.setImageUrl("http://example.com/product2");
-        products.put(2, product1);
+        products.put(2, product2);
 
         Product product3 = new Product();
         product3.setId(3);
         product3.setDescription("Product 3");
         product3.setPrice(new BigDecimal("18.95"));
         product3.setImageUrl("http://example.com/product3");
-        products.put(3, product1);
+        products.put(3, product3);
 
         Product product4 = new Product();
         product4.setId(4);
         product4.setDescription("Product 4");
         product4.setPrice(new BigDecimal("18.95"));
         product4.setImageUrl("http://example.com/product4");
-        products.put(4, product1);
+        products.put(4, product4);
     }
 }
